@@ -4,9 +4,6 @@ FROM node:10-alpine as build-env
 # Base packages and utils
 RUN apk add --update --no-cache git tar curl vim python python-dev make gcc g++ automake autoconf linux-headers libgcc libstdc++
 
-# Use yarn as package manager
-RUN npm install -g yarn@latest
-
 # Set cache for mounting docker volumes
 RUN yarn config set cache-folder ~/.yarn
 
