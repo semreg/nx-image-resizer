@@ -23,7 +23,7 @@ async function bootstrap() {
   
   SwaggerModule.setup('api', app, document);
 
-  const port = process.env.port || 3333;
+  const port = process.env.PORT || 3333;
   
   await app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}/${globalPrefix}`);
