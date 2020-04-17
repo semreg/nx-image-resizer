@@ -7,7 +7,7 @@ WORKDIR /build
 # Copy package.json, yarn.lock files and download deps
 COPY package.json yarn.lock ./
 
-RUN yarn global add @nestjs/cli
+RUN yarn global add @nrwl/cli
 
 RUN yarn
 
