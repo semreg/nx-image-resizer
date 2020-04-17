@@ -1,39 +1,45 @@
-# This is the build environment
-FROM node:10-alpine as build-env
+# Start from node base image
+FROM node:12-alpine as builder
 
-# Base packages and utils
-RUN apk add --update --no-cache git tar curl vim python python-dev make gcc g++ automake autoconf linux-headers libgcc libstdc++
+# Set the current working directory inside the container
+WORKDIR /build
 
-# Set cache for mounting docker volumes
-RUN yarn config set cache-folder ~/.yarn
+# Copy package.json, yarn.lock files and download deps
+COPY package.json yarn.lock ./
 
-# Install build dependencies
-RUN yarn global add node-sass @nestjs/cli
+RUN yarn global add @nestjs/cli
 
-# Create build environment
-RUN mkdir -p /opt/build
-WORKDIR /opt/build
+RUN yarn
 
-# Only do a reinstall if package.json changed.
-COPY package.json .
-
-# Copy the project
+# Copy sources to the working directory
 COPY . .
 
-# Install deps
-RUN yarn install
+# Set the node environment
+ARG node_env=production
 
-# Run build
-RUN yarn build
+ENV NODE_ENV $node_env
 
-# Create the final image
-FROM node:10-alpine
+# Build the Node.js app
+ARG project
 
-# Set the working directory
-WORKDIR /opt/app
+RUN nx build
 
-# Selectively copy the app to the new image
-COPY --from=build-env /opt/build/dist /opt/app/dist
+# Start a new stage from node
+FROM node:12-alpine
 
-# And go 🚀
-CMD [ "node", "/opt/app/dist/apps/api/main" ]
+WORKDIR /dist
+
+# Set the node environment (nginx stage)
+ARG node_env=production
+ENV NODE_ENV $node_env
+
+# Copy the build artifacts from the previous stage
+ARG project
+
+COPY --from=builder /build/dist/apps/$project .
+
+COPY package.json yarn.lock ./
+
+RUN yarn
+
+CMD ["node", "main.js"]
