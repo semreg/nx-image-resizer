@@ -28,14 +28,19 @@
   "private": true,
   "dependencies": {
     "@nestjs/common": "^6.8.3",
+    "@nestjs/config": "^0.4.0",
     "@nestjs/core": "^6.8.3",
     "@nestjs/platform-express": "^6.8.3",
+    "@nestjs/swagger": "^4.5.1",
     "axios": "^0.19.2",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.11.1",
     "cloudinary": "^1.21.0",
     "datauri": "^2.0.0",
     "node-loader": "^0.6.0",
     "reflect-metadata": "^0.1.13",
-    "sharp": "^0.25.2"
+    "sharp": "^0.25.2",
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
     "@nestjs/schematics": "^6.7.0",
